@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.invader-container {
+    float: left;
+}
+
+.game-area {
+    width: 700px;
+    margin: 0 auto;
+    position: relative;
+    border: 1px dotted grey;
+    height: 100%;
+}
+
+.invaders-wrapper {
+    position: relative;
+    left: 0;
+    width: 600px;
+}
+
+.defender {
+    position: absolute;
+    bottom: 0;
+}
