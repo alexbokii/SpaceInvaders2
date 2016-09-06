@@ -21450,18 +21450,44 @@
 
 	        _this.state = { blockPositionLeft: 0,
 	            blockPositionTop: 0,
-	            direction: "to_right" };
+	            direction: "to_right",
+	            invaders: [] };
 
 	        // bind manually because React class components don't auto-bind
 	        // http://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html#autobinding
-	        // this.onChange = this.onChange.bind(this);
+	        //this.createNewInvadersArray = this.createNewInvadersArray.bind(this);
 	        return _this;
 	    }
 
 	    _createClass(Invaders, [{
+	        key: 'componentWillMount',
+	        value: function componentWillMount() {
+	            var invadersArray = [];
+	            for (var i = 0; i < 90; i++) {
+	                var invader = {
+	                    img: _react2.default.createElement('img', { src: 'alien.png', width: '20', height: '20' }),
+	                    alive: true,
+	                    bullet: false,
+	                    bulletTop: 0,
+	                    id: i
+	                };
+	                invadersArray.push(invader);
+	            }
+
+	            this.setState({ invaders: invadersArray });
+	        }
+	    }, {
+	        key: 'createInvaderBullet',
+	        value: function createInvaderBullet() {
+	            var invadersArray = this.state.invaders;
+	            var numberOfInv = Math.floor(Math.random() * invadersArray.length) + 1;
+	            invadersArray[numberOfInv].bullet = true;
+	            this.setState({ invaders: invadersArray });
+	        }
+	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            setInterval(function () {
+	            var moveInvadersInterval = setInterval(function () {
 	                if (this.state.direction === "to_right") {
 	                    if (this.state.blockPositionLeft < 100) {
 	                        this.setState({ blockPositionLeft: this.state.blockPositionLeft + 10 });
@@ -21477,23 +21503,36 @@
 	                        this.setState({ direction: "to_right" });
 	                    }
 	                }
+	                this.createInvaderBullet();
 	            }.bind(this), 1000);
+
+	            var moveBulletInterval = setInterval(function () {
+	                this.moveInvaderBullet();
+	            }.bind(this), 500);
+	        }
+	    }, {
+	        key: 'moveInvaderBullet',
+	        value: function moveInvaderBullet() {
+	            for (var i = 0; i < this.state.invaders.length; i++) {
+	                if (this.state.invaders[i].bullet) {
+	                    var updatedInvaders = this.state.invaders;
+	                    updatedInvaders[i].bulletTop = updatedInvaders[i].bulletTop + 10;
+	                    this.setState({ invaders: updatedInvaders });
+	                }
+	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var invader = {
-	                img: _react2.default.createElement('img', { src: 'alien.png', width: '20', height: '20' }),
-	                alive: true
-	            };
-
-	            var invaders = [];
-	            for (var i = 0; i < 90; i++) {
-	                invaders.push(invader);
-	            }
-
-	            var spaceInvader = invaders.map(function (inv, i) {
-	                if (inv.alive) {
+	            var spaceInvader = this.state.invaders.map(function (inv, i) {
+	                if (inv.alive && inv.bullet) {
+	                    return _react2.default.createElement(
+	                        'div',
+	                        { className: 'invader-container', key: i },
+	                        inv.img,
+	                        _react2.default.createElement('div', { className: 'invader-bullet', style: { top: inv.bulletTop } })
+	                    );
+	                } else if (inv.alive && !inv.bullet) {
 	                    return _react2.default.createElement(
 	                        'div',
 	                        { className: 'invader-container', key: i },
@@ -21529,7 +21568,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -21551,26 +21590,53 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Defender = function (_React$Component) {
-	  _inherits(Defender, _React$Component);
+	    _inherits(Defender, _React$Component);
 
-	  function Defender() {
-	    _classCallCheck(this, Defender);
+	    function Defender(props) {
+	        _classCallCheck(this, Defender);
 
-	    return _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).apply(this, arguments));
-	  }
+	        var _this = _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).call(this, props));
 
-	  _createClass(Defender, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        'defender'
-	      );
+	        _this.state = {
+	            defenderBullets: []
+	        };
+	        return _this;
 	    }
-	  }]);
 
-	  return Defender;
+	    _createClass(Defender, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var defenderBulletsInterval = setInterval(function () {
+	                for (var i = 0; i < this.state.defenderBullets.length; i++) {
+	                    var updatedBulletPositionArray = this.state.defenderBullets;
+	                    updatedBulletPositionArray[i].bottomPosition = updatedBulletPositionArray[i].bottomPosition + 5;
+	                    this.setState({ defenderBullets: updatedBulletPositionArray });
+	                }
+	            }.bind(this), 300);
+	        }
+	    }, {
+	        key: 'generateDefenderBullets',
+	        value: function generateDefenderBullets() {
+	            var bullet = {
+	                bottomPosition: 0,
+	                active: true
+	            };
+	            var newBulletsArray = this.state.defenderBullets;
+	            newBulletsArray.push(bullet);
+	            this.setState({ defenderBullets: newBulletsArray });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                'defender'
+	            );
+	        }
+	    }]);
+
+	    return Defender;
 	}(_react2.default.Component);
 
 	exports.default = Defender;

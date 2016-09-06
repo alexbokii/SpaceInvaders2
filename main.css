@@ -13,6 +13,7 @@ body {
 
 .invader-container {
     float: left;
+    position: relative;
 }
 
 .game-area {
@@ -32,4 +33,11 @@ body {
 .defender {
     position: absolute;
     bottom: 0;
+}
+
+.invader-bullet {
+    width: 3px;
+    height: 7px;
+    background-color: red;
+    position: absolute;
 }
