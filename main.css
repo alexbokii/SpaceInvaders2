@@ -9,11 +9,14 @@ html {
 
 body {
     height: 100%;
+    background-color: #000;
 }
 
 .invader-container {
-    float: left;
-    position: relative;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 1;
 }
 
 .game-area {
@@ -24,20 +27,76 @@ body {
     height: 100%;
 }
 
-.invaders-wrapper {
-    position: relative;
-    left: 0;
-    width: 600px;
-}
-
 .defender {
     position: absolute;
     bottom: 0;
+    width: 40px;
+    height: 20px;
+    background-color: #00ff00;
 }
 
 .invader-bullet {
     width: 3px;
     height: 7px;
     background-color: red;
+    position: absolute;
+}
+
+.defenderBullet {
+    width: 3px;
+    height: 7px;
+    background-color: green;
+    position: absolute;
+}
+
+/*invaders*/
+.first {
+     background: url('images/level1-cl.png');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.second {
+    background: url('images/level1-cl.png');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.third {
+    background: url('images/level2-cl.png');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.fourth {
+    background: url('images/level3-cl.png');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+.fifth {
+    background: url('images/level3-cl.png');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+}
+
+/*projectiles*/
+.inv-projectile {
+    width: 6px;
+    height: 10px;
+    background-size: cover;
+    background-image: url('images/inv-pr.png');
+    position: absolute;
+}
+
+.def-projectile {
+    width: 2px;
+    height: 8px;
+    background: #fff;
     position: absolute;
 }

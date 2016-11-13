@@ -46,11 +46,11 @@
 
 	'use strict';
 
-	var _game = __webpack_require__(176);
+	var _game = __webpack_require__(1);
 
 	var _game2 = _interopRequireDefault(_game);
 
-	var _defender = __webpack_require__(175);
+	var _defender = __webpack_require__(174);
 
 	var _defender2 = _interopRequireDefault(_defender);
 
@@ -61,7 +61,239 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
-/* 1 */,
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _invaders = __webpack_require__(173);
+
+	var _invaders2 = _interopRequireDefault(_invaders);
+
+	var _defender = __webpack_require__(174);
+
+	var _defender2 = _interopRequireDefault(_defender);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// import fill from 'lodash';
+
+	var SpaceInvaders = function (_React$Component) {
+	    _inherits(SpaceInvaders, _React$Component);
+
+	    function SpaceInvaders(props) {
+	        _classCallCheck(this, SpaceInvaders);
+
+	        var _this = _possibleConstructorReturn(this, (SpaceInvaders.__proto__ || Object.getPrototypeOf(SpaceInvaders)).call(this, props));
+
+	        _this.state = {
+	            invaders: invadersArray,
+	            invadersDirection: 'right',
+	            invadersDirectionSteps: 0,
+	            defender: {},
+	            defenderPosition: 20,
+	            invadersProjectiles: [],
+	            defenderProjectiles: [],
+	            gameAreaHeight: window.innerHeight
+	        };
+	        _this.handleKeyPress = _this.handleKeyPress.bind(_this);
+	        return _this;
+	    }
+
+	    _createClass(SpaceInvaders, [{
+	        key: 'handleKeyPress',
+	        value: function handleKeyPress(ev) {
+	            if (ev.key === 'ArrowRight') {
+	                this.setState({ defenderPosition: this.state.defenderPosition + 10 });
+	            } else if (ev.key === 'ArrowLeft') {
+	                this.setState({ defenderPosition: this.state.defenderPosition - 10 });
+	            } else if (ev.key === 'Space' || ev.key === 'Enter') {
+	                this.addDefenderProjectile();
+	            }
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            window.addEventListener('keydown', this.handleKeyPress);
+	            window.requestAnimationFrame(this.step.bind(this));
+	            var invaders = window.setInterval(function () {
+	                this.updateInvadersPosition();
+	            }.bind(this), 1000);
+
+	            var moveInvaderProjectiles = window.setInterval(function () {
+	                this.moveInvadersProjectiles();
+	            }.bind(this), 500);
+
+	            var moveDefenderProjectiles = window.setInterval(function () {
+	                this.moveDefenderProjectiles();
+	            }.bind(this), 100);
+
+	            var addInvaderProjectiles = window.setInterval(function () {
+	                this.addInvadersProjectile();
+	            }.bind(this), 3000);
+
+	            var checkMatches = window.setInterval(function () {
+	                this.checkPositions();
+	            }.bind(this), 2000);
+	        }
+	    }, {
+	        key: 'step',
+	        value: function step() {
+	            window.requestAnimationFrame(this.step.bind(this));
+	            this.forceUpdate();
+	        }
+
+	        // moveInvaders
+
+	    }, {
+	        key: 'updateInvadersPosition',
+	        value: function updateInvadersPosition() {
+	            this.state.invadersDirectionSteps < 20 ? this.moveInvaders("x", this.state.invadersDirection) : this.state.invadersDirection === 'left' ? this.setState({ invadersDirection: 'right' }, this.moveInvaders("y")) : this.setState({ invadersDirection: 'left' }, this.moveInvaders("y"));
+	        }
+	    }, {
+	        key: 'moveInvaders',
+	        value: function moveInvaders(coordinate, steps) {
+	            var newStateInvaders = [];
+	            for (var i = 0; i < this.state.invaders.length; i++) {
+	                var invader = this.state.invaders[i];
+	                if (coordinate === 'x') {
+	                    steps === 'left' ? invader.x = invader.x - 20 : invader.x = invader.x + 20;
+	                } else if (coordinate === 'y') {
+	                    invader.y = invader.y + 20;
+	                }
+	                newStateInvaders.push(invader);
+	            }
+
+	            if (coordinate === "x") {
+	                this.setState({ invaders: newStateInvaders, invadersDirectionSteps: this.state.invadersDirectionSteps + 1 });
+	            } else if (coordinate === 'y') {
+	                this.setState({ invaders: newStateInvaders, invadersDirectionSteps: 0 });
+	            }
+	        }
+
+	        // new defender projectile
+
+	    }, {
+	        key: 'addDefenderProjectile',
+	        value: function addDefenderProjectile() {
+	            var newDefenderProjectile = {
+	                x: this.state.defenderPosition,
+	                y: this.state.gameAreaHeight
+	            };
+	            var newDefenderProjectileArray = [].concat(_toConsumableArray(this.state.defenderProjectiles), [newDefenderProjectile]);
+	            this.setState({ defenderProjectiles: newDefenderProjectileArray });
+	        }
+
+	        // move defender projectiles
+
+	    }, {
+	        key: 'moveDefenderProjectiles',
+	        value: function moveDefenderProjectiles() {
+	            var updatedDefenderProjectilesPosition = [];
+	            for (var i = 0; i < this.state.defenderProjectiles.length; i++) {
+	                var projectile = this.state.defenderProjectiles[i];
+	                projectile.y = projectile.y - 10;
+	                updatedDefenderProjectilesPosition.push(projectile);
+	            }
+	            this.setState({ defenderProjectiles: updatedDefenderProjectilesPosition });
+	        }
+
+	        // new invaders projectile
+
+	    }, {
+	        key: 'addInvadersProjectile',
+	        value: function addInvadersProjectile() {
+	            var randomInvader = this.state.invaders[Math.floor(Math.random() * this.state.invaders.length)];
+	            var newDefenderProjectile = {
+	                x: randomInvader.x,
+	                y: randomInvader.y
+	            };
+	            var newInvadersProjectileArray = [].concat(_toConsumableArray(this.state.invadersProjectiles), [newDefenderProjectile]);
+	            this.setState({ invadersProjectiles: newInvadersProjectileArray });
+	        }
+
+	        // move invaders projectiles
+
+	    }, {
+	        key: 'moveInvadersProjectiles',
+	        value: function moveInvadersProjectiles() {
+	            var updatedInvadersProjectilesPosition = [];
+	            for (var i = 0; i < this.state.invadersProjectiles.length; i++) {
+	                var projectile = this.state.invadersProjectiles[i];
+	                projectile.y = projectile.y + 10;
+	                if (projectile.y < this.state.gameAreaHeight) {
+	                    updatedInvadersProjectilesPosition.push(projectile);
+	                }
+	            }
+	            this.setState({ invadersProjectiles: updatedInvadersProjectilesPosition });
+	        }
+
+	        // check positions of projectiles and invaders
+
+	    }, {
+	        key: 'checkPositions',
+	        value: function checkPositions() {
+	            console.log("Invaders: ", this.state.invaders, "defender: ", this.state.defender, "inv-pr: ", this.state.invadersProjectiles, "def-pr: ", this.state.defenderProjectiles);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var defenderProjectiles = this.state.defenderProjectiles.map(function (projectile) {
+	                return _react2.default.createElement('div', { className: 'def-projectile', style: { left: projectile.x, top: projectile.y } });
+	            });
+
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement(_invaders2.default, { invadersArray: invadersArray, invadersContainerPosition: this.state.invadersPosition, invadersProjectiles: this.state.invadersProjectiles }),
+	                _react2.default.createElement(_defender2.default, { defenderPosition: this.state.defenderPosition }),
+	                defenderProjectiles
+	            );
+	        }
+	    }]);
+
+	    return SpaceInvaders;
+	}(_react2.default.Component);
+
+	var invadersArray = [];
+	var types = ['fifth', 'fourth', 'third', 'second', 'first'];
+
+	for (var i = 0; i < 5; i++) {
+	    for (var j = 0; j < 10; j++) {
+	        var invader = {
+	            type: types[i],
+	            x: 30 * j,
+	            y: 30 * i,
+	            width: 20,
+	            height: 20,
+	            alive: true
+	        };
+
+	        invadersArray.push(invader);
+	    }
+	}
+
+	_reactDom2.default.render(_react2.default.createElement(SpaceInvaders, null), document.getElementById('space-invaders'));
+
+/***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -21443,110 +21675,32 @@
 	var Invaders = function (_React$Component) {
 	    _inherits(Invaders, _React$Component);
 
-	    function Invaders(props) {
+	    function Invaders() {
 	        _classCallCheck(this, Invaders);
 
-	        var _this = _possibleConstructorReturn(this, (Invaders.__proto__ || Object.getPrototypeOf(Invaders)).call(this, props));
-
-	        _this.state = { blockPositionLeft: 0,
-	            blockPositionTop: 0,
-	            direction: "to_right",
-	            invaders: [] };
-
-	        // bind manually because React class components don't auto-bind
-	        // http://facebook.github.io/react/blog/2015/01/27/react-v0.13.0-beta-1.html#autobinding
-	        //this.createNewInvadersArray = this.createNewInvadersArray.bind(this);
-	        return _this;
+	        return _possibleConstructorReturn(this, (Invaders.__proto__ || Object.getPrototypeOf(Invaders)).apply(this, arguments));
 	    }
 
 	    _createClass(Invaders, [{
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            var invadersArray = [];
-	            for (var i = 0; i < 90; i++) {
-	                var invader = {
-	                    img: _react2.default.createElement('img', { src: 'alien.png', width: '20', height: '20' }),
-	                    alive: true,
-	                    bullet: false,
-	                    bulletTop: 0,
-	                    id: i
-	                };
-	                invadersArray.push(invader);
-	            }
-
-	            this.setState({ invaders: invadersArray });
-	        }
-	    }, {
-	        key: 'createInvaderBullet',
-	        value: function createInvaderBullet() {
-	            var invadersArray = this.state.invaders;
-	            var numberOfInv = Math.floor(Math.random() * invadersArray.length) + 1;
-	            invadersArray[numberOfInv].bullet = true;
-	            this.setState({ invaders: invadersArray });
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var moveInvadersInterval = setInterval(function () {
-	                if (this.state.direction === "to_right") {
-	                    if (this.state.blockPositionLeft < 100) {
-	                        this.setState({ blockPositionLeft: this.state.blockPositionLeft + 10 });
-	                    } else if (this.state.blockPositionLeft === 100) {
-	                        this.setState({ blockPositionTop: this.state.blockPositionTop + 10 });
-	                        this.setState({ direction: "to_left" });
-	                    }
-	                } else if (this.state.direction === "to_left") {
-	                    if (this.state.blockPositionLeft > 0) {
-	                        this.setState({ blockPositionLeft: this.state.blockPositionLeft - 10 });
-	                    } else if (this.state.blockPositionLeft === 0) {
-	                        this.setState({ blockPositionTop: this.state.blockPositionTop + 10 });
-	                        this.setState({ direction: "to_right" });
-	                    }
-	                }
-	                this.createInvaderBullet();
-	            }.bind(this), 1000);
-
-	            var moveBulletInterval = setInterval(function () {
-	                this.moveInvaderBullet();
-	            }.bind(this), 500);
-	        }
-	    }, {
-	        key: 'moveInvaderBullet',
-	        value: function moveInvaderBullet() {
-	            for (var i = 0; i < this.state.invaders.length; i++) {
-	                if (this.state.invaders[i].bullet) {
-	                    var updatedInvaders = this.state.invaders;
-	                    updatedInvaders[i].bulletTop = updatedInvaders[i].bulletTop + 10;
-	                    this.setState({ invaders: updatedInvaders });
-	                }
-	            }
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var spaceInvader = this.state.invaders.map(function (inv, i) {
-	                if (inv.alive && inv.bullet) {
-	                    return _react2.default.createElement(
-	                        'div',
-	                        { className: 'invader-container', key: i },
-	                        inv.img,
-	                        _react2.default.createElement('div', { className: 'invader-bullet', style: { top: inv.bulletTop } })
-	                    );
-	                } else if (inv.alive && !inv.bullet) {
-	                    return _react2.default.createElement(
-	                        'div',
-	                        { className: 'invader-container', key: i },
-	                        inv.img
-	                    );
-	                } else {
-	                    return _react2.default.createElement('div', { className: 'invader-container' });
-	                }
+	            var invader = this.props.invadersArray.map(function (inv, i) {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'invader-container', key: i, style: { top: inv.y, left: inv.x } },
+	                    _react2.default.createElement('div', { className: inv.type })
+	                );
+	            });
+
+	            var invadersProjectiles = this.props.invadersProjectiles.map(function (projectile, i) {
+	                return _react2.default.createElement('div', { className: 'inv-projectile', key: i, style: { top: projectile.y, left: projectile.x } });
 	            });
 
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'invaders-wrapper', style: { left: this.state.blockPositionLeft + "px", top: this.state.blockPositionTop + "px" } },
-	                spaceInvader
+	                { className: 'invaders-wrapper' },
+	                invader,
+	                invadersProjectiles
 	            );
 	        }
 	    }]);
@@ -21556,19 +21710,14 @@
 
 	exports.default = Invaders;
 
-	// toDo
-	// make more types of invaders 
-	// fire
-
 /***/ },
-/* 174 */,
-/* 175 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -21590,123 +21739,25 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Defender = function (_React$Component) {
-	    _inherits(Defender, _React$Component);
+	  _inherits(Defender, _React$Component);
 
-	    function Defender(props) {
-	        _classCallCheck(this, Defender);
+	  function Defender() {
+	    _classCallCheck(this, Defender);
 
-	        var _this = _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).call(this, props));
+	    return _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).apply(this, arguments));
+	  }
 
-	        _this.state = {
-	            defenderBullets: []
-	        };
-	        return _this;
+	  _createClass(Defender, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('div', { className: 'defender', style: { left: this.props.defenderPosition } });
 	    }
+	  }]);
 
-	    _createClass(Defender, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var defenderBulletsInterval = setInterval(function () {
-	                for (var i = 0; i < this.state.defenderBullets.length; i++) {
-	                    var updatedBulletPositionArray = this.state.defenderBullets;
-	                    updatedBulletPositionArray[i].bottomPosition = updatedBulletPositionArray[i].bottomPosition + 5;
-	                    this.setState({ defenderBullets: updatedBulletPositionArray });
-	                }
-	            }.bind(this), 300);
-	        }
-	    }, {
-	        key: 'generateDefenderBullets',
-	        value: function generateDefenderBullets() {
-	            var bullet = {
-	                bottomPosition: 0,
-	                active: true
-	            };
-	            var newBulletsArray = this.state.defenderBullets;
-	            newBulletsArray.push(bullet);
-	            this.setState({ defenderBullets: newBulletsArray });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                'defender'
-	            );
-	        }
-	    }]);
-
-	    return Defender;
+	  return Defender;
 	}(_react2.default.Component);
 
 	exports.default = Defender;
-
-	// toDo
-	// defender svg
-	// move it to the lrft/right with a key
-	// fire
-
-/***/ },
-/* 176 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(35);
-
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-
-	var _invaders = __webpack_require__(173);
-
-	var _invaders2 = _interopRequireDefault(_invaders);
-
-	var _defender = __webpack_require__(175);
-
-	var _defender2 = _interopRequireDefault(_defender);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var SpaceInvaders = function (_React$Component) {
-	    _inherits(SpaceInvaders, _React$Component);
-
-	    function SpaceInvaders() {
-	        _classCallCheck(this, SpaceInvaders);
-
-	        return _possibleConstructorReturn(this, (SpaceInvaders.__proto__ || Object.getPrototypeOf(SpaceInvaders)).apply(this, arguments));
-	    }
-
-	    _createClass(SpaceInvaders, [{
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(
-	                'div',
-	                null,
-	                _react2.default.createElement(_invaders2.default, null),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'defender' },
-	                    _react2.default.createElement(_defender2.default, null)
-	                )
-	            );
-	        }
-	    }]);
-
-	    return SpaceInvaders;
-	}(_react2.default.Component);
-
-	_reactDom2.default.render(_react2.default.createElement(SpaceInvaders, null), document.getElementById('space-invaders'));
 
 /***/ }
 /******/ ]);
