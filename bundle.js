@@ -112,7 +112,8 @@
 	            defenderPosition: 20,
 	            invadersProjectiles: [],
 	            defenderProjectiles: [],
-	            gameAreaHeight: window.innerHeight
+	            gameAreaHeight: window.innerHeight,
+	            defenderLife: 3
 	        };
 	        _this.handleKeyPress = _this.handleKeyPress.bind(_this);
 	        return _this;
@@ -140,7 +141,7 @@
 
 	            var moveInvaderProjectiles = window.setInterval(function () {
 	                this.moveInvadersProjectiles();
-	            }.bind(this), 500);
+	            }.bind(this), 1);
 
 	            var moveDefenderProjectiles = window.setInterval(function () {
 	                this.moveDefenderProjectiles();
@@ -150,9 +151,9 @@
 	                this.addInvadersProjectile();
 	            }.bind(this), 3000);
 
-	            var checkMatches = window.setInterval(function () {
-	                this.checkPositions();
-	            }.bind(this), 2000);
+	            // let checkMatches = window.setInterval(function() {
+	            //     this.checkPositions();
+	            // }.bind(this), 2000);
 	        }
 	    }, {
 	        key: 'step',
@@ -238,20 +239,15 @@
 	            var updatedInvadersProjectilesPosition = [];
 	            for (var i = 0; i < this.state.invadersProjectiles.length; i++) {
 	                var projectile = this.state.invadersProjectiles[i];
-	                projectile.y = projectile.y + 10;
-	                if (projectile.y < this.state.gameAreaHeight) {
+	                projectile.y = projectile.y + 1;
+
+	                if (projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition && projectile.x <= this.state.defenderPosition + 40) {
+	                    this.setState({ defenderLife: this.state.defenderLife - 1 });
+	                } else if (projectile.y < this.state.gameAreaHeight) {
 	                    updatedInvadersProjectilesPosition.push(projectile);
 	                }
 	            }
 	            this.setState({ invadersProjectiles: updatedInvadersProjectilesPosition });
-	        }
-
-	        // check positions of projectiles and invaders
-
-	    }, {
-	        key: 'checkPositions',
-	        value: function checkPositions() {
-	            console.log("Invaders: ", this.state.invaders, "defender: ", this.state.defender, "inv-pr: ", this.state.invadersProjectiles, "def-pr: ", this.state.defenderProjectiles);
 	        }
 	    }, {
 	        key: 'render',
@@ -263,6 +259,16 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'game-settings' },
+	                    _react2.default.createElement(
+	                        'p',
+	                        null,
+	                        'Lifes: ',
+	                        this.state.defenderLife
+	                    )
+	                ),
 	                _react2.default.createElement(_invaders2.default, { invadersArray: invadersArray, invadersContainerPosition: this.state.invadersPosition, invadersProjectiles: this.state.invadersProjectiles }),
 	                _react2.default.createElement(_defender2.default, { defenderPosition: this.state.defenderPosition }),
 	                defenderProjectiles

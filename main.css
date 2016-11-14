@@ -12,6 +12,15 @@ body {
     background-color: #000;
 }
 
+.invaders-wrapper {
+    position: relative;
+}
+
+.game-settings {
+    height: 50px;
+    color: white;
+}
+
 .invader-container {
     position: absolute;
     width: 20px;

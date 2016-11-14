@@ -15,7 +15,8 @@ class SpaceInvaders extends React.Component {
             defenderPosition: 20,
             invadersProjectiles: [],
             defenderProjectiles: [],
-            gameAreaHeight: window.innerHeight
+            gameAreaHeight: window.innerHeight,
+            defenderLife: 3
         };
         this.handleKeyPress = this.handleKeyPress.bind(this)
     }
@@ -41,7 +42,7 @@ class SpaceInvaders extends React.Component {
 
         let moveInvaderProjectiles = window.setInterval(function() {
             this.moveInvadersProjectiles();
-        }.bind(this), 500);
+        }.bind(this), 1);
 
         let moveDefenderProjectiles = window.setInterval(function() {
             this.moveDefenderProjectiles();
@@ -51,9 +52,9 @@ class SpaceInvaders extends React.Component {
             this.addInvadersProjectile();
         }.bind(this), 3000);
 
-        let checkMatches = window.setInterval(function() {
-            this.checkPositions();
-        }.bind(this), 2000);
+        // let checkMatches = window.setInterval(function() {
+        //     this.checkPositions();
+        // }.bind(this), 2000);
     }
 
     step() {
@@ -126,17 +127,16 @@ class SpaceInvaders extends React.Component {
         let updatedInvadersProjectilesPosition = [];
         for(var i = 0; i < this.state.invadersProjectiles.length; i++) {
             let projectile = this.state.invadersProjectiles[i];
-            projectile.y = projectile.y + 10;
-            if(projectile.y < this.state.gameAreaHeight) {
+            projectile.y = projectile.y + 1;
+
+            if(projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition &&  projectile.x <= this.state.defenderPosition + 40) {
+                this.setState({defenderLife: this.state.defenderLife - 1});
+            }
+            else if(projectile.y < this.state.gameAreaHeight) {
                 updatedInvadersProjectilesPosition.push(projectile);
             }           
         }
         this.setState({invadersProjectiles: updatedInvadersProjectilesPosition});
-    }
-
-    // check positions of projectiles and invaders
-    checkPositions() {
-        console.log("Invaders: ", this.state.invaders, "defender: ", this.state.defender, "inv-pr: ", this.state.invadersProjectiles, "def-pr: ", this.state.defenderProjectiles);
     }
 
     render() {
@@ -146,6 +146,9 @@ class SpaceInvaders extends React.Component {
 
         return (
             <div>
+                <div className="game-settings">
+                    <p>Lifes: {this.state.defenderLife}</p>
+                </div>
                 <Invaders invadersArray={invadersArray} invadersContainerPosition={this.state.invadersPosition} invadersProjectiles={this.state.invadersProjectiles}/>
                 <Defender defenderPosition={this.state.defenderPosition} />
                 {defenderProjectiles}
