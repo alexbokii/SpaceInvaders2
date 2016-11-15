@@ -5,11 +5,14 @@
 
 html {
     height: 100%;
+    font-size: 100%;
+    line-height: 1.5;
 }
 
 body {
     height: 100%;
     background-color: #000;
+    font-family: 'Aldrich', sans-serif;
 }
 
 .invaders-wrapper {
@@ -19,6 +22,7 @@ body {
 .game-settings {
     height: 50px;
     color: white;
+    padding-top: 0.5em;
 }
 
 .invader-container {
@@ -39,9 +43,6 @@ body {
 .defender {
     position: absolute;
     bottom: 0;
-    width: 40px;
-    height: 20px;
-    background-color: #00ff00;
 }
 
 .invader-bullet {
@@ -59,6 +60,7 @@ body {
 }
 
 /*invaders*/
+
 .first {
      background: url('images/level1-cl.png');
     width: 100%;
@@ -95,6 +97,7 @@ body {
 }
 
 /*projectiles*/
+
 .inv-projectile {
     width: 6px;
     height: 10px;
@@ -108,4 +111,26 @@ body {
     height: 8px;
     background: #fff;
     position: absolute;
+}
+
+/* game settings */
+
+.settings-text {
+    text-transform: uppercase;
+    font-size: 80%;
+}
+
+.inline-svgs {
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* other classes */
+.pull-left {
+    float: left;
+}
+
+.pull-right {
+    float: right;
 }

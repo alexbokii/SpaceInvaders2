@@ -84,6 +84,10 @@
 
 	var _defender2 = _interopRequireDefault(_defender);
 
+	var _gameSettings = __webpack_require__(175);
+
+	var _gameSettings2 = _interopRequireDefault(_gameSettings);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -113,7 +117,7 @@
 	            invadersProjectiles: [],
 	            defenderProjectiles: [],
 	            gameAreaHeight: window.innerHeight,
-	            defenderLife: 3
+	            defenderLive: 3
 	        };
 	        _this.handleKeyPress = _this.handleKeyPress.bind(_this);
 	        return _this;
@@ -242,7 +246,7 @@
 	                projectile.y = projectile.y + 1;
 
 	                if (projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition && projectile.x <= this.state.defenderPosition + 40) {
-	                    this.setState({ defenderLife: this.state.defenderLife - 1 });
+	                    this.setState({ defenderLive: this.state.defenderLive - 1 });
 	                } else if (projectile.y < this.state.gameAreaHeight) {
 	                    updatedInvadersProjectilesPosition.push(projectile);
 	                }
@@ -259,16 +263,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'game-settings' },
-	                    _react2.default.createElement(
-	                        'p',
-	                        null,
-	                        'Lifes: ',
-	                        this.state.defenderLife
-	                    )
-	                ),
+	                _react2.default.createElement(_gameSettings2.default, { lives: this.state.defenderLive }),
 	                _react2.default.createElement(_invaders2.default, { invadersArray: invadersArray, invadersContainerPosition: this.state.invadersPosition, invadersProjectiles: this.state.invadersProjectiles }),
 	                _react2.default.createElement(_defender2.default, { defenderPosition: this.state.defenderPosition }),
 	                defenderProjectiles
@@ -21723,7 +21718,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -21745,25 +21740,127 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Defender = function (_React$Component) {
-	  _inherits(Defender, _React$Component);
+	    _inherits(Defender, _React$Component);
 
-	  function Defender() {
-	    _classCallCheck(this, Defender);
+	    function Defender() {
+	        _classCallCheck(this, Defender);
 
-	    return _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).apply(this, arguments));
-	  }
-
-	  _createClass(Defender, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement('div', { className: 'defender', style: { left: this.props.defenderPosition } });
+	        return _possibleConstructorReturn(this, (Defender.__proto__ || Object.getPrototypeOf(Defender)).apply(this, arguments));
 	    }
-	  }]);
 
-	  return Defender;
+	    _createClass(Defender, [{
+	        key: 'render',
+	        value: function render() {
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'defender', style: { left: this.props.defenderPosition } },
+	                _react2.default.createElement(
+	                    'svg',
+	                    { xmlns: 'http://www.w3.org/2000/svg', width: '40', height: '24', viewBox: '0 0 40 24' },
+	                    _react2.default.createElement('rect', { x: '19', y: '0', width: '2', height: '2', fill: '#00ff00' }),
+	                    _react2.default.createElement('rect', { x: '17', y: '2', width: '6', height: '6', fill: '#00ff00' }),
+	                    _react2.default.createElement('rect', { x: '3', y: '8', width: '34', height: '3', fill: '#00ff00' }),
+	                    _react2.default.createElement('rect', { width: '40', height: '12', x: '0', y: '11', fill: '#00ff00' })
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Defender;
 	}(_react2.default.Component);
 
 	exports.default = Defender;
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var GameSettings = function (_React$Component) {
+	    _inherits(GameSettings, _React$Component);
+
+	    function GameSettings() {
+	        _classCallCheck(this, GameSettings);
+
+	        return _possibleConstructorReturn(this, (GameSettings.__proto__ || Object.getPrototypeOf(GameSettings)).apply(this, arguments));
+	    }
+
+	    _createClass(GameSettings, [{
+	        key: 'render',
+	        value: function render() {
+	            var defenderLivesArray = [];
+	            for (var i = 0; i < this.props.lives; i++) {
+	                defenderLivesArray.push(i);
+	            }
+
+	            var defenderLives = defenderLivesArray.map(function (live, i) {
+	                return _react2.default.createElement(
+	                    'div',
+	                    { className: 'inline-svgs', key: i },
+	                    _react2.default.createElement(
+	                        'svg',
+	                        { xmlns: 'http://www.w3.org/2000/svg', width: '32', height: '21', viewBox: '0 0 30 21' },
+	                        _react2.default.createElement('rect', { x: '15', y: '0', width: '2', height: '2', fill: '#00ff00' }),
+	                        _react2.default.createElement('rect', { x: '13', y: '2', width: '6', height: '5', fill: '#00ff00' }),
+	                        _react2.default.createElement('rect', { x: '2', y: '7', width: '28', height: '2', fill: '#00ff00' }),
+	                        _react2.default.createElement('rect', { x: '0', y: '9', width: '32', height: '12', fill: '#00ff00' })
+	                    )
+	                );
+	            });
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'game-settings' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'pull-left' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'settings-text' },
+	                        'score: '
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'pull-right' },
+	                    _react2.default.createElement(
+	                        'span',
+	                        { className: 'settings-text' },
+	                        'lives: '
+	                    ),
+	                    defenderLives
+	                )
+	            );
+	        }
+	    }]);
+
+	    return GameSettings;
+	}(_react2.default.Component);
+
+	exports.default = GameSettings;
 
 /***/ }
 /******/ ]);

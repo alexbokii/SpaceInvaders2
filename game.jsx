@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Invaders from './invaders.jsx';
 import Defender from './defender.jsx';
+import GameSettings from './game-settings.jsx';
 // import fill from 'lodash';
  
 class SpaceInvaders extends React.Component {
@@ -16,7 +17,7 @@ class SpaceInvaders extends React.Component {
             invadersProjectiles: [],
             defenderProjectiles: [],
             gameAreaHeight: window.innerHeight,
-            defenderLife: 3
+            defenderLive: 3
         };
         this.handleKeyPress = this.handleKeyPress.bind(this)
     }
@@ -130,7 +131,7 @@ class SpaceInvaders extends React.Component {
             projectile.y = projectile.y + 1;
 
             if(projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition &&  projectile.x <= this.state.defenderPosition + 40) {
-                this.setState({defenderLife: this.state.defenderLife - 1});
+                this.setState({defenderLive: this.state.defenderLive - 1});
             }
             else if(projectile.y < this.state.gameAreaHeight) {
                 updatedInvadersProjectilesPosition.push(projectile);
@@ -146,9 +147,7 @@ class SpaceInvaders extends React.Component {
 
         return (
             <div>
-                <div className="game-settings">
-                    <p>Lifes: {this.state.defenderLife}</p>
-                </div>
+                <GameSettings lives={this.state.defenderLive} />
                 <Invaders invadersArray={invadersArray} invadersContainerPosition={this.state.invadersPosition} invadersProjectiles={this.state.invadersProjectiles}/>
                 <Defender defenderPosition={this.state.defenderPosition} />
                 {defenderProjectiles}
