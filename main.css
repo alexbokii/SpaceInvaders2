@@ -59,6 +59,23 @@ body {
     position: absolute;
 }
 
+.gameOver {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+    z-index: 10;
+}
+
+.gameOver h1 {
+    vertical-align: middle;
+    font-size: 4em;
+    margin-top: 5em;
+    text-align: center;
+}
+
 /*invaders*/
 
 .first {

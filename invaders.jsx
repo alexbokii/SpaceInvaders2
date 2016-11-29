@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom';
 class Invaders extends React.Component {
     render() {
         let invader = this.props.invadersArray.map(function(inv, i) {
-            return <div className="invader-container" key={i} style={{top: inv.y, left: inv.x}}>
-                <div className={inv.type}></div>
-            </div>
+            if(inv.alive) {
+                return <div className="invader-container" key={i} style={{top: inv.y, left: inv.x}}>
+                    <div className={inv.type}></div>
+                </div>
+            }
         });
 
         let invadersProjectiles = this.props.invadersProjectiles.map(function(projectile, i) {
