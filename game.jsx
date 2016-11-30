@@ -46,19 +46,15 @@ class SpaceInvaders extends React.Component {
 
         let moveInvaderProjectiles = window.setInterval(function() {
             this.moveInvadersProjectiles();
-        }.bind(this), 1);
+        }.bind(this), 10);
 
         let moveDefenderProjectiles = window.setInterval(function() {
             this.moveDefenderProjectiles();
-        }.bind(this), 100);
+        }.bind(this), 60);
 
         let addInvaderProjectiles = window.setInterval(function() {
             this.addInvadersProjectile();
         }.bind(this), 3000);
-
-        // let checkMatches = window.setInterval(function() {
-        //     this.checkPositions();
-        // }.bind(this), 2000);
     }
 
     step() {
@@ -75,7 +71,7 @@ class SpaceInvaders extends React.Component {
 
     moveInvaders(coordinate, steps) {
         let newStateInvaders = [];
-        for(let i = 0; i < this.state.invaders.length; i++) {
+        for(let i in this.state.invaders) {
             let invader = this.state.invaders[i];
             if(coordinate === 'x') {
                 steps === 'left' ? invader.x = invader.x - 20 : invader.x = invader.x + 20;
@@ -109,7 +105,7 @@ class SpaceInvaders extends React.Component {
     moveDefenderProjectiles() {
         // move
         let updatedDefenderProjectilesPosition = [];
-        for(var i = 0; i < this.state.defenderProjectiles.length; i++) {
+        for(var i in this.state.defenderProjectiles) {
             let projectile = this.state.defenderProjectiles[i];
             projectile.y = projectile.y - 10;
             updatedDefenderProjectilesPosition.push(projectile);
@@ -118,15 +114,17 @@ class SpaceInvaders extends React.Component {
 
         // check if invader is hit by defenderProjectile
         let dp = this.state.defenderProjectiles;
-        for(let i = 0; i < dp.length; i++) {
+        for(let i in dp) {
+            let hitInvaders;
             let xInvaders = _.filter(this.state.invaders, function(inv) { return inv.x >= dp[i].x && inv.x <= dp[i].x + 20});
-            for(let j = 0; j < xInvaders.length; j++) {
-                let hitInvaders = _.filter(xInvaders, function(inv) { return inv.y >= dp[i].y && inv.y <= dp[i].y + 20 });
-                if(hitInvaders.length > 0) {
-                    this.killInvader(hitInvaders[0].id);
-                    let updatedefenderProjectiles = _.filter(this.state.defenderProjectiles, function(projectile) { return projectile.id != updatedDefenderProjectilesPosition[i].id});
-                    this.setState({defenderProjectiles: updatedefenderProjectiles});
-                }
+            for(let j in xInvaders) {
+                hitInvaders = _.filter(xInvaders, function(inv) { return inv.y >= dp[i].y && inv.y <= dp[i].y + 20 });
+            }
+            if(hitInvaders.length > 0) {
+                this.killInvader(hitInvaders[0].id);
+                this.updateDefenderScore(hitInvaders[0].type);
+                let updatedefenderProjectiles = _.filter(this.state.defenderProjectiles, function(projectile) { return projectile.id != updatedDefenderProjectilesPosition[i].id});
+                this.setState({defenderProjectiles: updatedefenderProjectiles});
             }
         }
     }
@@ -146,6 +144,18 @@ class SpaceInvaders extends React.Component {
         this.setState({invaders: updatedInvadersArray});
     }
 
+    updateDefenderScore(type) {
+        const scores = {
+            'first': 10,
+            'second': 10,
+            'third': 20,
+            'fourth': 20,
+            'fifth': 30
+        };
+        let newDefenderScore = scores[type] + this.state.defenderScore;
+        this.setState({defenderScore: newDefenderScore});
+    }
+
     // new invaders projectile
     addInvadersProjectile() {
         let randomInvader = this.state.invaders[Math.floor(Math.random()*this.state.invaders.length)];
@@ -160,9 +170,9 @@ class SpaceInvaders extends React.Component {
     // move invaders projectiles
     moveInvadersProjectiles() {
         let updatedInvadersProjectilesPosition = [];
-        for(var i = 0; i < this.state.invadersProjectiles.length; i++) {
+        for(var i in  this.state.invadersProjectiles) {
             let projectile = this.state.invadersProjectiles[i];
-            projectile.y = projectile.y + 1;
+            projectile.y = projectile.y + 3;
 
             if(projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition &&  projectile.x <= this.state.defenderPosition + 40) {
                 this.setState({defenderLive: this.state.defenderLive - 1});
@@ -202,12 +212,14 @@ for (let i = 0; i < 5; i++) {
             width: 20,
             height: 20,
             alive: true,
-            id: i+j
+            id: i+j.toString()
         }
 
         invadersArray.push(invader);
     }
 };
+
+console.log(invadersArray);
 
 ReactDOM.render(<SpaceInvaders/>, document.getElementById('space-invaders'));
 

@@ -150,19 +150,15 @@
 
 	            var moveInvaderProjectiles = window.setInterval(function () {
 	                this.moveInvadersProjectiles();
-	            }.bind(this), 1);
+	            }.bind(this), 10);
 
 	            var moveDefenderProjectiles = window.setInterval(function () {
 	                this.moveDefenderProjectiles();
-	            }.bind(this), 100);
+	            }.bind(this), 60);
 
 	            var addInvaderProjectiles = window.setInterval(function () {
 	                this.addInvadersProjectile();
 	            }.bind(this), 3000);
-
-	            // let checkMatches = window.setInterval(function() {
-	            //     this.checkPositions();
-	            // }.bind(this), 2000);
 	        }
 	    }, {
 	        key: 'step',
@@ -182,7 +178,7 @@
 	        key: 'moveInvaders',
 	        value: function moveInvaders(coordinate, steps) {
 	            var newStateInvaders = [];
-	            for (var i = 0; i < this.state.invaders.length; i++) {
+	            for (var i in this.state.invaders) {
 	                var invader = this.state.invaders[i];
 	                if (coordinate === 'x') {
 	                    steps === 'left' ? invader.x = invader.x - 20 : invader.x = invader.x + 20;
@@ -222,7 +218,7 @@
 
 	            // move
 	            var updatedDefenderProjectilesPosition = [];
-	            for (var i = 0; i < this.state.defenderProjectiles.length; i++) {
+	            for (var i in this.state.defenderProjectiles) {
 	                var projectile = this.state.defenderProjectiles[i];
 	                projectile.y = projectile.y - 10;
 	                updatedDefenderProjectilesPosition.push(projectile);
@@ -233,24 +229,26 @@
 	            var dp = this.state.defenderProjectiles;
 
 	            var _loop = function _loop(_i) {
+	                var hitInvaders = void 0;
 	                var xInvaders = _.filter(_this2.state.invaders, function (inv) {
 	                    return inv.x >= dp[_i].x && inv.x <= dp[_i].x + 20;
 	                });
-	                for (var j = 0; j < xInvaders.length; j++) {
-	                    var hitInvaders = _.filter(xInvaders, function (inv) {
+	                for (var j in xInvaders) {
+	                    hitInvaders = _.filter(xInvaders, function (inv) {
 	                        return inv.y >= dp[_i].y && inv.y <= dp[_i].y + 20;
 	                    });
-	                    if (hitInvaders.length > 0) {
-	                        _this2.killInvader(hitInvaders[0].id);
-	                        var updatedefenderProjectiles = _.filter(_this2.state.defenderProjectiles, function (projectile) {
-	                            return projectile.id != updatedDefenderProjectilesPosition[_i].id;
-	                        });
-	                        _this2.setState({ defenderProjectiles: updatedefenderProjectiles });
-	                    }
+	                }
+	                if (hitInvaders.length > 0) {
+	                    _this2.killInvader(hitInvaders[0].id);
+	                    _this2.updateDefenderScore(hitInvaders[0].type);
+	                    var updatedefenderProjectiles = _.filter(_this2.state.defenderProjectiles, function (projectile) {
+	                        return projectile.id != updatedDefenderProjectilesPosition[_i].id;
+	                    });
+	                    _this2.setState({ defenderProjectiles: updatedefenderProjectiles });
 	                }
 	            };
 
-	            for (var _i = 0; _i < dp.length; _i++) {
+	            for (var _i in dp) {
 	                _loop(_i);
 	            }
 	        }
@@ -270,6 +268,19 @@
 	                }
 	            });
 	            this.setState({ invaders: updatedInvadersArray });
+	        }
+	    }, {
+	        key: 'updateDefenderScore',
+	        value: function updateDefenderScore(type) {
+	            var scores = {
+	                'first': 10,
+	                'second': 10,
+	                'third': 20,
+	                'fourth': 20,
+	                'fifth': 30
+	            };
+	            var newDefenderScore = scores[type] + this.state.defenderScore;
+	            this.setState({ defenderScore: newDefenderScore });
 	        }
 
 	        // new invaders projectile
@@ -292,9 +303,9 @@
 	        key: 'moveInvadersProjectiles',
 	        value: function moveInvadersProjectiles() {
 	            var updatedInvadersProjectilesPosition = [];
-	            for (var i = 0; i < this.state.invadersProjectiles.length; i++) {
+	            for (var i in this.state.invadersProjectiles) {
 	                var projectile = this.state.invadersProjectiles[i];
-	                projectile.y = projectile.y + 1;
+	                projectile.y = projectile.y + 3;
 
 	                if (projectile.y === this.state.gameAreaHeight && projectile.x >= this.state.defenderPosition && projectile.x <= this.state.defenderPosition + 40) {
 	                    this.setState({ defenderLive: this.state.defenderLive - 1 });
@@ -337,12 +348,14 @@
 	            width: 20,
 	            height: 20,
 	            alive: true,
-	            id: i + j
+	            id: i + j.toString()
 	        };
 
 	        invadersArray.push(invader);
 	    }
 	};
+
+	console.log(invadersArray);
 
 	_reactDom2.default.render(_react2.default.createElement(SpaceInvaders, null), document.getElementById('space-invaders'));
 
